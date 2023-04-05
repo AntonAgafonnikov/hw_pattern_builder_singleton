@@ -1,19 +1,18 @@
 package ru.netology.task1;
 
 import java.util.Objects;
+import java.util.OptionalInt;
 
 public class Person {
     private final String name;
     private final String surname;
-    private int age;
+    private OptionalInt age;
     private String address;
-    private boolean flagSetAge;
 
     public Person(final PersonBuilder personBuilder) {
         this.name = personBuilder.getName();
         this.surname = personBuilder.getSurname();
         this.age = personBuilder.getAge();
-        this.flagSetAge = personBuilder.getFlagSetAge();
         this.address = personBuilder.getAddress();
     }
 
@@ -25,7 +24,7 @@ public class Person {
         return surname;
     }
 
-    public int getAge() {
+    public OptionalInt getAge() {
         return age;
     }
 
@@ -33,12 +32,12 @@ public class Person {
         return address;
     }
 
-    public boolean hasAge() {
-        return flagSetAge;
-    }
-
     public boolean hasAddress() {
         return !"".equals(address);
+    }
+
+    public boolean hasAge() {
+        return age.isPresent();
     }
 
     public void setAddress(String address) {
@@ -46,12 +45,15 @@ public class Person {
     }
 
     public void setAge(int age) {
-        if (!flagSetAge) this.age = age;
-        flagSetAge = true;
+        if (this.age.isEmpty()) {
+            this.age = OptionalInt.of(age);
+        }
     }
 
     public void happyBirthday() {
-        if (flagSetAge) this.age++;
+        if (this.age.isPresent()) {
+            this.age = OptionalInt.of(age.getAsInt() + 1);
+        }
     }
 
     public PersonBuilder newChildBuilder() {

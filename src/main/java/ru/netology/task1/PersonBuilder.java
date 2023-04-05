@@ -1,11 +1,16 @@
 package ru.netology.task1;
 
+import java.util.OptionalInt;
+
 public class PersonBuilder {
     private String name;
     private String surname;
-    private int age;
+    private OptionalInt age;
     private String address;
-    private boolean flagSetAge;
+
+    PersonBuilder() {
+        age = OptionalInt.empty();
+    }
 
     public String getName() {
         return name;
@@ -15,16 +20,12 @@ public class PersonBuilder {
         return surname;
     }
 
-    public int getAge() {
+    public OptionalInt getAge() {
         return age;
     }
 
     public String getAddress() {
         return address;
-    }
-
-    public boolean getFlagSetAge() {
-        return flagSetAge;
     }
 
     public PersonBuilder setName(String name) {
@@ -38,8 +39,7 @@ public class PersonBuilder {
     }
 
     public PersonBuilder setAge(int age) {
-        this.age = age;
-        this.flagSetAge = true;
+        this.age = OptionalInt.of(age);
         if (!validAge()) {
             throw new IllegalArgumentException("Недопустимый возраст: " + age);
         }
@@ -63,6 +63,9 @@ public class PersonBuilder {
     }
 
     public boolean validAge() {
-        return age >= 0 && age <= 120;
+        if (age.isPresent()) {
+            return age.getAsInt() >= 0 && age.getAsInt() <= 120;
+        }
+        return false;
     }
 }
